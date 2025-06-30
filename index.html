@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weaher APP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CUACE</h1>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" id="cityInput" placeholder="Masukkan nama kota">
+            <button class="search-btn" id="searchBtn"></button>
+        </div>
+
+        <button class="current-location-btn" id="locationBtn">Lokasi saat ini</button>
+
+        <div class="error" id="errorMsg">
+            Kota tidak dapat ditemukan
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p>Sedang mengambil data cuaca</p>
+        </div>
+
+        <div class="weather-card" id="weatherCard">
+            <div class="location" id="location">Raja Jawa,Indonesia</div>
+            <div class="date" id="date">Senin 30 Juni 2025</div>
+            <div class="weather-icon" id="weaherIcon">☀️</div>
+            <div class="temperature" id="temperature">28 C</div>
+            <div class="weaher-description" id="description">Panas</div>
+            
+            <div class="weather-details">
+                <div class="detail-item">
+                    <div class="detail-label">Kelembaban</div>
+                    <div class="detail-value" id="humidity">65%</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Kecepatan Angin</div>
+                    <div class="detail-value" id="windSpeed">5 km/h</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Terasa Seperti</div>
+                    <div class="detail-value" id="feelsLike">30 C</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Tekanan</div>
+                    <div class="detail-value" id="pressure">1013 hPa</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="index.js"></script>
+</body>
+</html>
