@@ -3,11 +3,39 @@ const apiUrl =
   "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
+const locationBtn = document.getElementById("locationBtn");
+const loading = document.getElementById("loading");
+const errorMsg = document.getElementById("errorMsg");
+const weatherCard = document.getElementById("weatherCard");
 
-async function checkWeather(city) {
-  const response = await fetch(apiUrl + city + `&appid=${apiKey}` + "&lang=id");
-  let data = await response.json();
+// Fungsi untuk menampilkan loading
+function showLoading() {
+  loading.style.display = "block";
+  errorMsg.style.display = "none";
+  weatherCard.style.display = "none";
+}
 
+// Fungsi untuk menyembunyikan loading
+function hideLoading() {
+  loading.style.display = "none";
+}
+
+// Fungsi untuk menampilkan error
+function showError(message = "Kota tidak dapat ditemukan") {
+  errorMsg.textContent = message;
+  errorMsg.style.display = "block";
+  weatherCard.style.display = "none";
+  hideLoading();
+}
+
+// Fungsi untuk menampilkan weather card
+function showWeatherCard() {
+  weatherCard.style.display = "block";
+  errorMsg.style.display = "none";
+  hideLoading();
+}
+
+function updateWeatherDisplay(data) {
   console.log(data);
   console.log(data.weather[0]);
 
@@ -25,6 +53,13 @@ async function checkWeather(city) {
   const imgSrc = getWeatherImg(data.weather[0].main);
   weatherImg.src = imgSrc;
   weatherImg.alt = data.weather[0].description;
+}
+
+async function checkWeather(city) {
+  const response = await fetch(apiUrl + city + `&appid=${apiKey}` + "&lang=id");
+  let data = await response.json();
+  updateWeatherDisplay(data);
+  showWeatherCard();
 
   const now = new Date();
   const options = {
@@ -42,6 +77,65 @@ async function checkWeather(city) {
 searchBtn.addEventListener("click", () => {
   checkWeather(cityInput.value);
 });
+
+locationBtn.addEventListener("click", getCurrentLocation);
+
+async function checkWeatherByCoords(lat, lon) {
+  try {
+    showLoading();
+    const response = await fetch(
+      `${apiUrlCoords}&lat=${lat}&lon=${lon}&appid=${apiKey}&lang=id`
+    );
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data cuaca");
+    }
+
+    let data = await response.json();
+    updateWeatherDisplay(data);
+    showWeatherCard();
+  } catch (error) {
+    console.log("Error:", error);
+    showError("Gagal mengambil data cuaca untuk lokasi anda");
+  }
+}
+
+function getCurrentLocation() {
+  if (!navigator.geolocation) {
+    showError("Pengambilan lokasi tidak didukung oleh browser anda");
+    return;
+  }
+  showLoading();
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      checkWeatherByCoords(lat, lon);
+    },
+    (error) => {
+      let errorMessage = "Gagal mendapatkan lokasi anda";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage =
+            "Izin lokasi ditolak aktifkan izin lokasi di browser anda";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = "Informasi tidak tersedia";
+          break;
+        case error.TIMEOUT:
+          errorMessage = "Waktu perminttan lokasi habis";
+          break;
+      }
+      console.log("Geolocation error:", error);
+      showError(errorMessage);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 30000,
+    }
+  );
+}
 
 function getWeatherImg(weatherMain) {
   const imgMap = {
@@ -76,4 +170,5 @@ window.addEventListener("load", function () {
     "id-ID",
     options
   );
+  showWeatherCard();
 });
