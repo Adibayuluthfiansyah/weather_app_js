@@ -8,14 +8,12 @@ const loading = document.getElementById("loading");
 const errorMsg = document.getElementById("errorMsg");
 const weatherCard = document.getElementById("weatherCard");
 
-// Fungsi untuk menampilkan loading
 function showLoading() {
   loading.style.display = "block";
   errorMsg.style.display = "none";
   weatherCard.style.display = "none";
 }
 
-// Fungsi untuk menyembunyikan loading
 function hideLoading() {
   loading.style.display = "none";
 }
@@ -28,7 +26,6 @@ function showError(message = "Kota tidak dapat ditemukan") {
   hideLoading();
 }
 
-// Fungsi untuk menampilkan weather card
 function showWeatherCard() {
   weatherCard.style.display = "block";
   errorMsg.style.display = "none";
