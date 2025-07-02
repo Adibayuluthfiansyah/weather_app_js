@@ -18,7 +18,6 @@ function hideLoading() {
   loading.style.display = "none";
 }
 
-// Fungsi untuk menampilkan error
 function showError(message = "Kota tidak dapat ditemukan") {
   errorMsg.textContent = message;
   errorMsg.style.display = "block";
